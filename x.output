@@ -1,0 +1,155 @@
+
+
+-------- Grammar --------
+
+rule 1 rexpr: rexpr PLUS rterm
+rule 2 rexpr: rterm
+rule 3 rterm: rterm rfactor
+rule 4 rterm: rfactor
+rule 5 rfactor: rfactor STAR
+rule 6 rfactor: rprimary
+rule 7 rprimary: A
+rule 8 rprimary: B
+
+------- Symbols -------
+
+**Nonterminals, with rules where they appear
+
+  $start (6)
+    on right: 
+    on left : 
+  rexpr (7)
+    on right: 1
+    on left : 1 2
+  rterm (8)
+    on right: 1 2 3
+    on left : 3 4
+  rfactor (9)
+    on right: 3 4 5
+    on left : 5 6
+  rprimary (10)
+    on right: 6
+    on left : 7 8
+
+**Terminals, with rules where they appear
+
+  $end (0) 
+  error (1) 
+  PLUS (2) 1
+  STAR (3) 5
+  A (4) 7
+  B (5) 8
+
+--------- State ---------
+
+state 0
+
+
+  A             shift, and go to state 5
+  B             shift, and go to state 6
+
+  rexpr         go to state 1
+  rterm         go to state 2
+  rfactor       go to state 3
+  rprimary      go to state 4
+
+state 1
+
+   1) rexpr : rexpr _ PLUS rterm
+
+  $end          shift, and go to state 7
+  PLUS          shift, and go to state 8
+
+
+state 2
+
+   2) rexpr : rterm _
+   3) rterm : rterm _ rfactor
+
+  A             shift, and go to state 5
+  B             shift, and go to state 6
+  $default      reduce using rule 2 (rexpr)
+
+  rfactor       go to state 9
+  rprimary      go to state 4
+
+state 3
+
+   4) rterm : rfactor _
+   5) rfactor : rfactor _ STAR
+
+  STAR          shift, and go to state 10
+  $default      reduce using rule 4 (rterm)
+
+
+state 4
+
+   6) rfactor : rprimary _
+
+  $default      reduce using rule 6 (rfactor)
+
+
+state 5
+
+   7) rprimary : A _
+
+  $default      reduce using rule 7 (rprimary)
+
+
+state 6
+
+   8) rprimary : B _
+
+  $default      reduce using rule 8 (rprimary)
+
+
+state 7
+
+
+  $end          shift, and go to state 11
+
+
+state 8
+
+   1) rexpr : rexpr PLUS _ rterm
+
+  A             shift, and go to state 5
+  B             shift, and go to state 6
+
+  rterm         go to state 12
+  rfactor       go to state 3
+  rprimary      go to state 4
+
+state 9
+
+   3) rterm : rterm rfactor _
+   5) rfactor : rfactor _ STAR
+
+  STAR          shift, and go to state 10
+  $default      reduce using rule 3 (rterm)
+
+
+state 10
+
+   5) rfactor : rfactor STAR _
+
+  $default      reduce using rule 5 (rfactor)
+
+
+state 11
+
+
+  $default      accept
+
+
+state 12
+
+   1) rexpr : rexpr PLUS rterm _
+   3) rterm : rterm _ rfactor
+
+  A             shift, and go to state 5
+  B             shift, and go to state 6
+  $default      reduce using rule 1 (rexpr)
+
+  rfactor       go to state 9
+  rprimary      go to state 4
