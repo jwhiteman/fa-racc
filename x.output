@@ -1,0 +1,302 @@
+
+
+-------- Grammar --------
+
+rule 1 regex: union
+rule 2 regex: simpleregex
+rule 3 union: regex BAR simpleregex
+rule 4 simpleregex: concatenation
+rule 5 simpleregex: basicregex
+rule 6 concatenation: simpleregex basicregex
+rule 7 basicregex: star
+rule 8 basicregex: question
+rule 9 basicregex: plus
+rule 10 basicregex: elementaryregex
+rule 11 star: elementaryregex STAR
+rule 12 question: elementaryregex QUESTION
+rule 13 question: elementaryregex PLUS
+rule 14 elementaryregex: group
+rule 15 elementaryregex: char
+rule 16 group: LPAREN regex RPAREN
+rule 17 char: CHAR
+
+------- Symbols -------
+
+**Nonterminals, with rules where they appear
+
+  $start (10)
+    on right: 
+    on left : 
+  regex (11)
+    on right: 3 16
+    on left : 1 2
+  union (12)
+    on right: 1
+    on left : 3
+  simpleregex (13)
+    on right: 2 3 6
+    on left : 4 5
+  concatenation (14)
+    on right: 4
+    on left : 6
+  basicregex (15)
+    on right: 5 6
+    on left : 7 8 9 10
+  star (16)
+    on right: 7
+    on left : 11
+  question (17)
+    on right: 8
+    on left : 12 13
+  elementaryregex (18)
+    on right: 10 11 12 13
+    on left : 14 15
+  group (19)
+    on right: 14
+    on left : 16
+  char (20)
+    on right: 15
+    on left : 17
+
+**Terminals, with rules where they appear
+
+  $end (0) 
+  error (1) 
+  BAR (2) 3
+  plus (3) 9
+  STAR (4) 11
+  QUESTION (5) 12
+  PLUS (6) 13
+  LPAREN (7) 16
+  RPAREN (8) 16
+  CHAR (9) 17
+
+--------- State ---------
+
+state 0
+
+
+  plus          shift, and go to state 8
+  LPAREN        shift, and go to state 12
+  CHAR          shift, and go to state 13
+
+  regex         go to state 1
+  union         go to state 2
+  simpleregex   go to state 3
+  concatenation  go to state 4
+  basicregex    go to state 5
+  star          go to state 6
+  question      go to state 7
+  elementaryregex  go to state 9
+  group         go to state 10
+  char          go to state 11
+
+state 1
+
+   3) union : regex _ BAR simpleregex
+
+  $end          shift, and go to state 14
+  BAR           shift, and go to state 15
+
+
+state 2
+
+   1) regex : union _
+
+  $default      reduce using rule 1 (regex)
+
+
+state 3
+
+   2) regex : simpleregex _
+   6) concatenation : simpleregex _ basicregex
+
+  plus          shift, and go to state 8
+  LPAREN        shift, and go to state 12
+  CHAR          shift, and go to state 13
+  $default      reduce using rule 2 (regex)
+
+  basicregex    go to state 16
+  star          go to state 6
+  question      go to state 7
+  elementaryregex  go to state 9
+  group         go to state 10
+  char          go to state 11
+
+state 4
+
+   4) simpleregex : concatenation _
+
+  $default      reduce using rule 4 (simpleregex)
+
+
+state 5
+
+   5) simpleregex : basicregex _
+
+  $default      reduce using rule 5 (simpleregex)
+
+
+state 6
+
+   7) basicregex : star _
+
+  $default      reduce using rule 7 (basicregex)
+
+
+state 7
+
+   8) basicregex : question _
+
+  $default      reduce using rule 8 (basicregex)
+
+
+state 8
+
+   9) basicregex : plus _
+
+  $default      reduce using rule 9 (basicregex)
+
+
+state 9
+
+  10) basicregex : elementaryregex _
+  11) star : elementaryregex _ STAR
+  12) question : elementaryregex _ QUESTION
+  13) question : elementaryregex _ PLUS
+
+  STAR          shift, and go to state 17
+  QUESTION      shift, and go to state 18
+  PLUS          shift, and go to state 19
+  $default      reduce using rule 10 (basicregex)
+
+
+state 10
+
+  14) elementaryregex : group _
+
+  $default      reduce using rule 14 (elementaryregex)
+
+
+state 11
+
+  15) elementaryregex : char _
+
+  $default      reduce using rule 15 (elementaryregex)
+
+
+state 12
+
+  16) group : LPAREN _ regex RPAREN
+
+  plus          shift, and go to state 8
+  LPAREN        shift, and go to state 12
+  CHAR          shift, and go to state 13
+
+  union         go to state 2
+  simpleregex   go to state 3
+  regex         go to state 20
+  concatenation  go to state 4
+  basicregex    go to state 5
+  star          go to state 6
+  question      go to state 7
+  elementaryregex  go to state 9
+  group         go to state 10
+  char          go to state 11
+
+state 13
+
+  17) char : CHAR _
+
+  $default      reduce using rule 17 (char)
+
+
+state 14
+
+
+  $end          shift, and go to state 21
+
+
+state 15
+
+   3) union : regex BAR _ simpleregex
+
+  plus          shift, and go to state 8
+  LPAREN        shift, and go to state 12
+  CHAR          shift, and go to state 13
+
+  simpleregex   go to state 22
+  concatenation  go to state 4
+  basicregex    go to state 5
+  star          go to state 6
+  question      go to state 7
+  elementaryregex  go to state 9
+  group         go to state 10
+  char          go to state 11
+
+state 16
+
+   6) concatenation : simpleregex basicregex _
+
+  $default      reduce using rule 6 (concatenation)
+
+
+state 17
+
+  11) star : elementaryregex STAR _
+
+  $default      reduce using rule 11 (star)
+
+
+state 18
+
+  12) question : elementaryregex QUESTION _
+
+  $default      reduce using rule 12 (question)
+
+
+state 19
+
+  13) question : elementaryregex PLUS _
+
+  $default      reduce using rule 13 (question)
+
+
+state 20
+
+   3) union : regex _ BAR simpleregex
+  16) group : LPAREN regex _ RPAREN
+
+  BAR           shift, and go to state 15
+  RPAREN        shift, and go to state 23
+
+
+state 21
+
+
+  $default      accept
+
+
+state 22
+
+   3) union : regex BAR simpleregex _
+   6) concatenation : simpleregex _ basicregex
+
+  plus          shift, and go to state 8
+  LPAREN        shift, and go to state 12
+  CHAR          shift, and go to state 13
+  $default      reduce using rule 3 (union)
+
+  basicregex    go to state 16
+  star          go to state 6
+  question      go to state 7
+  elementaryregex  go to state 9
+  group         go to state 10
+  char          go to state 11
+
+state 23
+
+  16) group : LPAREN regex RPAREN _
+
+  $default      reduce using rule 16 (group)
+
