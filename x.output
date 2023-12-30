@@ -1,0 +1,158 @@
+
+
+-------- Grammar --------
+
+rule 1 template: "{{" tcontents "}}"
+rule 2 tcontents: telements
+rule 3 tcontents: tcontents "|" telements
+rule 4 telements: telement
+rule 5 telements: telements telement
+rule 6 telement: TEXT
+rule 7 telement: template
+
+------- Symbols -------
+
+**Nonterminals, with rules where they appear
+
+  $start (6)
+    on right: 
+    on left : 
+  template (7)
+    on right: 7
+    on left : 1
+  tcontents (8)
+    on right: 1 3
+    on left : 2 3
+  telements (9)
+    on right: 2 3 5
+    on left : 4 5
+  telement (10)
+    on right: 4 5
+    on left : 6 7
+
+**Terminals, with rules where they appear
+
+  $end (0) 
+  error (1) 
+  "{{" (2) 1
+  "}}" (3) 1
+  "|" (4) 3
+  TEXT (5) 6
+
+--------- State ---------
+
+state 0
+
+
+  "{{"          shift, and go to state 2
+
+  template      go to state 1
+
+state 1
+
+
+  $end          shift, and go to state 3
+
+
+state 2
+
+   1) template : "{{" _ tcontents "}}"
+
+  "{{"          shift, and go to state 2
+  TEXT          shift, and go to state 7
+
+  tcontents     go to state 4
+  telements     go to state 5
+  telement      go to state 6
+  template      go to state 8
+
+state 3
+
+
+  $end          shift, and go to state 9
+
+
+state 4
+
+   1) template : "{{" tcontents _ "}}"
+   3) tcontents : tcontents _ "|" telements
+
+  "}}"          shift, and go to state 10
+  "|"           shift, and go to state 11
+
+
+state 5
+
+   2) tcontents : telements _
+   5) telements : telements _ telement
+
+  "{{"          shift, and go to state 2
+  TEXT          shift, and go to state 7
+  $default      reduce using rule 2 (tcontents)
+
+  telement      go to state 12
+  template      go to state 8
+
+state 6
+
+   4) telements : telement _
+
+  $default      reduce using rule 4 (telements)
+
+
+state 7
+
+   6) telement : TEXT _
+
+  $default      reduce using rule 6 (telement)
+
+
+state 8
+
+   7) telement : template _
+
+  $default      reduce using rule 7 (telement)
+
+
+state 9
+
+
+  $default      accept
+
+
+state 10
+
+   1) template : "{{" tcontents "}}" _
+
+  $default      reduce using rule 1 (template)
+
+
+state 11
+
+   3) tcontents : tcontents "|" _ telements
+
+  "{{"          shift, and go to state 2
+  TEXT          shift, and go to state 7
+
+  telements     go to state 13
+  telement      go to state 6
+  template      go to state 8
+
+state 12
+
+   5) telements : telements telement _
+
+  $default      reduce using rule 5 (telements)
+
+
+state 13
+
+   3) tcontents : tcontents "|" telements _
+   5) telements : telements _ telement
+
+  "{{"          shift, and go to state 2
+  TEXT          shift, and go to state 7
+  $default      reduce using rule 3 (tcontents)
+
+  telement      go to state 12
+  template      go to state 8
